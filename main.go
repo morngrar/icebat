@@ -13,8 +13,14 @@ type responseType struct {
 	StatusGetRSP struct {
 		WebHeader struct {
 			BatteryChargeLevelPercentage int
+			BatteryChargingState         bool
 		}
 	}
+}
+
+var chargingMap = map[bool]string{
+	true:  "charging",
+	false: "discharging",
 }
 
 func main() {
@@ -46,5 +52,11 @@ func main() {
 		log.Fatalf("Error unmarshaling response: %s", err)
 	}
 
-	fmt.Println(res.StatusGetRSP.WebHeader.BatteryChargeLevelPercentage)
+	s := fmt.Sprintf(
+		"%d\t%s",
+		res.StatusGetRSP.WebHeader.BatteryChargeLevelPercentage,
+		chargingMap[res.StatusGetRSP.WebHeader.BatteryChargingState],
+	)
+
+	fmt.Println(s)
 }
