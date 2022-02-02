@@ -14,6 +14,7 @@ type responseType struct {
 		WebHeader struct {
 			BatteryChargeLevelPercentage int
 			BatteryChargingState         bool
+			BatteryPresent               bool
 		}
 	}
 }
@@ -21,6 +22,11 @@ type responseType struct {
 var chargingMap = map[bool]string{
 	true:  "charging",
 	false: "discharging",
+}
+
+var presenceMap = map[bool]string{
+	true:  "battery",
+	false: "AC",
 }
 
 func main() {
@@ -53,9 +59,10 @@ func main() {
 	}
 
 	s := fmt.Sprintf(
-		"%d\t%s",
+		"%d\t%s\t%s",
 		res.StatusGetRSP.WebHeader.BatteryChargeLevelPercentage,
 		chargingMap[res.StatusGetRSP.WebHeader.BatteryChargingState],
+		presenceMap[res.StatusGetRSP.WebHeader.BatteryPresent],
 	)
 
 	fmt.Println(s)
